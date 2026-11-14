@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Info.plist for the IOKit-era variant (Mac OS X Server 1.x and later).
+
+  Rhapsody DR2 itself does NOT read this file: it has no IOKit, no kext
+  bundles and no personality matching.  It is included because porting this
+  stack upward to Mac OS X Server 1.x / Mac OS X DP is the obvious next step,
+  and because that is the only environment where "kext" is the right word.
+
+  Two personalities: the host controller driver (PCI match) and the HID
+  driver, which is instantiated by the HCD rather than matched by the loader.
+-->
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>org.rhapsody.usb</string>
+    <key>CFBundleName</key>
+    <string>RhapsodyUSB</string>
+    <key>CFBundleVersion</key>
+    <string>0.1.0</string>
+    <key>CFBundlePackageType</key>
+    <string>KEXT</string>
+    <key>OSBundleLibraries</key>
+    <dict>
+        <key>com.apple.iokit.IOPCIFamily</key>
+        <string>1.0</string>
+    </dict>
+
+    <key>IOKitPersonalities</key>
+    <dict>
+        <key>RhapsodyUSBUHCI</key>
+        <dict>
+            <key>CFBundleIdentifier</key>
+            <string>org.rhapsody.usb</string>
+            <key>IOClass</key>
+            <string>RhapsodyUSBUHCI</string>
+            <key>IOProviderClass</key>
+            <string>IOPCIDevice</string>
+            <!-- class 0x0c, subclass 0x03, programming interface 0x00 -->
+            <key>IOPCIClassMatch</key>
+            <string>0x0c030000&amp;0xffff0000</string>
+            <key>IOPCITunnelCompatible</key>
+            <true/>
+        </dict>
+
+        <key>RhapsodyUSBHID</key>
+        <dict>
+            <key>CFBundleIdentifier</key>
+            <string>org.rhapsody.usb</string>
+            <key>IOClass</key>
+            <string>RhapsodyUSBHID</string>
+            <key>IOProviderClass</key>
+            <string>RhapsodyUSBDevice</string>
+            <key>DeviceUsagePairs</key>
+            <array>
+                <dict>
+                    <key>DeviceUsagePage</key>
+                    <integer>1</integer>
+                    <key>DeviceUsage</key>
+                    <integer>6</integer>
+                </dict>
+                <dict>
+                    <key>DeviceUsagePage</key>
+                    <integer>1</integer>
+                    <key>DeviceUsage</key>
+                    <integer>2</integer>
+                </dict>
+            </array>
+        </dict>
+    </dict>
+</dict>
+</plist>
